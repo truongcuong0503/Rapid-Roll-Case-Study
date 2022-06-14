@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <button onclick="start()">Start</button>
+    <button onclick="stop()">Stop</button>
+
+    <center>
+    <canvas width="400px" height="750px" style="border: 1px solid;" id="canvas"></canvas>
+    </center>
+    
+</body>
+<script>
+    class Rectangle {
+        x
+        y
+        width
+        height
+        color
+        constructor(x, y, width, height, color ) {
+            this.x = x
+            this.y = y
+            this.width = width
+            this.height = height
+            this.color = color
+        }       
+
+        drawRect(color) {
+            let ctx = document.getElementById("canvas").getContext("2d")
+            ctx.beginPath()
+            ctx.fillStyle = this.color
+            ctx.fillRect(this.x, this.y, this.width, this.height)
+            ctx.closePath()
+        }
+    }
+
+    class Circle {
+        x
+        y
+        radius
+        color
+        constructor(x, y, radius, color) {
+            this.x = x
+            this.y = y
+            this.radius = radius
+            this.color = color
+        }
+
+        drawCircle() {
+            let ctx = document.getElementById("canvas").getContext("2d")
+            ctx.beginPath()
+            ctx.fillStyle = this.color
+            ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2)
+            ctx.fill()
+            ctx.closePath()
+        }
+
+        // isCheckCollision() {
+        //     if (circle.x < rect.x) {
+        //         this.x = rect.x
+        //     } else if (circle.x > rect.width) {
+        //         this.x = rect.width
+        //     }
+
+        //     if (circle.y < rect.y) {
+        //         this.y = rect.y
+        //     } else if (circle.y > rect.height) {
+        //         this.y = rect.height
+        //     }
+
+        //     let dx = circle.x - this.x
+        //     let dy = circle.y - this.y
+
+        //     return (Math.pow(dx, 2) * Math.pow(dy, 2)) <= Math.pow(this.radius, 2)
+        // }
+    }
+
+    let rect = new Rectangle(100, 720, 100, 10, "green")
+    let rectDie = new Rectangle(0, 0, 750, 10, "red")
+    let circle = new Circle(150, 710, 10, "black")
+    rect.drawRect()
+    rectDie.drawRect()
+    circle.drawCircle()
+
+    let ctx = document.getElementById("canvas").getContext("2d")
+    let interval
+    let intervalCir
+
+    //tốc độ hcn
+    function speedRect(rectangle) {
+        rectangle.y -= 5
+    }
+
+    //tốc độ hình tròn
+    function speedCircleDown(circle) {
+        circle.x -= 5
+        circle.y += 5
+    }
+
+    function speedCircleUp(circle) {
+        circle.y -= 5
+    }
+
+    //hcn di chuyển
+    function moveRect() {
+        ctx.clearRect(0, 0, 400, 750)
+        drawNewRect1()
+        speedRect(rect)
+        moveCircleUp()
+        rect.drawRect()
+        rectDie.drawRect()
+        circle.drawCircle()
+    }
+
+    function moveLeft(circle) {
+        circle.x -= 5
+    }
+
+    function moveRight(circle) {
+        circle.x += 5
+    }
+
+    function moveSelection(evt) {
+        switch(evt.keyCode) {
+            case 37:
+                moveLeft(circle);
+                break;
+            case 39:
+                moveRight(circle);
+                break;
+        }
+    }
+
+    window.addEventListener("keydown", moveSelection)
+
+    //vẽ hcn mới
+    function drawNewRect1() {
+        speedRect(rect)
+        moveCircleUp()
+    }
+
+    function drawNewRect2() {
+        rect.drawRect()
+        speedRect(rect)
+        moveCircleDown()
+    }
+
+    //hình tròn rơi
+    function moveCircleDown() {
+        speedCircleDown(circle)
+    }
+
+    function moveCircleUp() {
+        speedCircleUp(circle)
+    }
+
+    function start() {
+        interval = setInterval(moveRect, 150)
+    }
+
+    function stop() {
+        clearInterval(interval)
+    }
+    
+</script>
+</html>
