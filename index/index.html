@@ -99,11 +99,10 @@
 
     //tốc độ hình tròn
     function speedCircleDown(circle) {
-        circle.x -= 5
         circle.y += 5
     }
 
-    function speedCircleUp(circle) {
+    function speedCircle(circle) {
         circle.y -= 5
     }
 
@@ -112,7 +111,7 @@
         ctx.clearRect(0, 0, 400, 750)
         drawNewRect1()
         speedRect(rect)
-        moveCircleUp()
+        moveCircle()
         rect.drawRect()
         rectDie.drawRect()
         circle.drawCircle()
@@ -142,22 +141,22 @@
     //vẽ hcn mới
     function drawNewRect1() {
         speedRect(rect)
-        moveCircleUp()
+        moveCircle()
     }
 
-    function drawNewRect2() {
-        rect.drawRect()
-        speedRect(rect)
-        moveCircleDown()
-    }
+    // function drawNewRect2() {
+    //     rect.drawRect()
+    //     speedRect(rect)
+    //     moveCircleDown()
+    // }
 
     //hình tròn rơi
     function moveCircleDown() {
         speedCircleDown(circle)
     }
 
-    function moveCircleUp() {
-        speedCircleUp(circle)
+    function moveCircle() {
+        speedCircle(circle)
     }
 
     function start() {
