@@ -10,7 +10,6 @@
 <body>
     <button onclick="start()">Start</button>
     <button onclick="stop()">Stop</button>
-
     <center>
     <canvas width="400px" height="750px" style="border: 1px solid;" id="canvas"></canvas>
     </center>
@@ -61,27 +60,28 @@
             ctx.closePath()
         }
 
-        // isCheckCollision() {
-        //     if (circle.x < rect.x) {
-        //         this.x = rect.x
-        //     } else if (circle.x > rect.width) {
-        //         this.x = rect.width
-        //     }
+        isCheckCollision(rectangle) {
+            if (circle.x < rectangle.x) {
+                this.x = rectangle.x
+            } else if (circle.x > rectangle.width) {
+                this.x = rectangle.width
+            }
 
-        //     if (circle.y < rect.y) {
-        //         this.y = rect.y
-        //     } else if (circle.y > rect.height) {
-        //         this.y = rect.height
-        //     }
+            if (circle.y < rectangle.y) {
+                this.y = rectangle.y
+            } else if (circle.y > rectangle.height) {
+                this.y = rectangle.height
+            }
 
-        //     let dx = circle.x - this.x
-        //     let dy = circle.y - this.y
+            let dx = circle.x - this.x
+            let dy = circle.y - this.y
 
-        //     return (Math.pow(dx, 2) * Math.pow(dy, 2)) <= Math.pow(this.radius, 2)
-        // }
+            return (Math.pow(dx, 2) * Math.pow(dy, 2)) <= Math.pow(this.radius, 2)
+        }
     }
 
     let rect = new Rectangle(100, 720, 100, 10, "green")
+    let newRect = new Rectangle((Math.random() * 400), 720, 100, 10, "green")
     let rectDie = new Rectangle(0, 0, 750, 10, "red")
     let circle = new Circle(150, 710, 10, "black")
     rect.drawRect()
@@ -89,8 +89,24 @@
     circle.drawCircle()
 
     let ctx = document.getElementById("canvas").getContext("2d")
-    let interval
-    let intervalCir
+    let interval   
+    
+    //vẽ hcn mới
+    function drawNewRect1(rectangle) {
+        while (rectangle.y) {
+            if (rectangle.y == 700) {
+                newRect.drawRect()
+            }
+        }
+            
+            speedRect(newRect)
+    }
+
+    function newGame() {
+        if (circle.isCheckCollision(rect)) {
+            moveRect()
+        }
+    }
 
     //tốc độ hcn
     function speedRect(rectangle) {
@@ -102,16 +118,22 @@
         circle.y += 5
     }
 
+    //hình tròn rơi
+    // function moveCircleDown() {
+    //     speedCircleDown(circle)
+    // }
+
     function speedCircle(circle) {
-        circle.y -= 5
+            circle.y -= 5
     }
 
     //hcn di chuyển
     function moveRect() {
         ctx.clearRect(0, 0, 400, 750)
-        drawNewRect1()
         speedRect(rect)
-        moveCircle()
+        speedCircle(circle)
+        drawNewRect1(rect)
+        checkWin()
         rect.drawRect()
         rectDie.drawRect()
         circle.drawCircle()
@@ -138,26 +160,18 @@
 
     window.addEventListener("keydown", moveSelection)
 
-    //vẽ hcn mới
-    function drawNewRect1() {
-        speedRect(rect)
-        moveCircle()
-    }
-
-    // function drawNewRect2() {
-    //     rect.drawRect()
-    //     speedRect(rect)
-    //     moveCircleDown()
+    // while (rect.y) {
+    //     if (rect.y == 700) {
+    //         drawNewRect1()
+    //     }
     // }
 
-    //hình tròn rơi
-    function moveCircleDown() {
-        speedCircleDown(circle)
+    function checkWin() {
+        if (circle.y <= 0) {
+            alert("lose")
+        }
     }
 
-    function moveCircle() {
-        speedCircle(circle)
-    }
 
     function start() {
         interval = setInterval(moveRect, 150)
