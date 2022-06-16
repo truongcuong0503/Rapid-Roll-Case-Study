@@ -11,12 +11,12 @@
     <button onclick="start()">Start</button>
     <button onclick="stop()">Stop</button>
     <center>
-    <canvas width="400px" height="750px" style="border: 1px solid;" id="canvas"></canvas>
+    <canvas width="400px" height="700px" style="border: 1px solid;" id="canvas"></canvas>
     </center>
     
 </body>
 <script>
-    class Rectangle {
+    class Brick {
         x
         y
         width
@@ -30,7 +30,7 @@
             this.color = color
         }       
 
-        drawRect(color) {
+        drawBrick() {
             let ctx = document.getElementById("canvas").getContext("2d")
             ctx.beginPath()
             ctx.fillStyle = this.color
@@ -39,7 +39,7 @@
         }
     }
 
-    class Circle {
+    class Ball {
         x
         y
         radius
@@ -51,7 +51,7 @@
             this.color = color
         }
 
-        drawCircle() {
+        drawBall() {
             let ctx = document.getElementById("canvas").getContext("2d")
             ctx.beginPath()
             ctx.fillStyle = this.color
@@ -60,121 +60,126 @@
             ctx.closePath()
         }
 
-        isCheckCollision(rectangle) {
-            if (circle.x < rectangle.x) {
-                this.x = rectangle.x
-            } else if (circle.x > rectangle.width) {
-                this.x = rectangle.width
+        isCheckCollision(brick) {
+            if (ball.x < brick.x) {
+                this.x = brick.x
+            } else if (ball.x > brick.width) {
+                this.x = brick.width
             }
 
-            if (circle.y < rectangle.y) {
-                this.y = rectangle.y
-            } else if (circle.y > rectangle.height) {
-                this.y = rectangle.height
+            if (ball.y < brick.y) {
+                this.y = brick.y
+            } else if (ball.y > brick.height) {
+                this.y = brick.height
             }
 
-            let dx = circle.x - this.x
-            let dy = circle.y - this.y
+            let dx = ball.x - this.x
+            let dy = ball.y - this.y
 
             return (Math.pow(dx, 2) * Math.pow(dy, 2)) <= Math.pow(this.radius, 2)
         }
     }
-
-    let rect = new Rectangle(100, 720, 100, 10, "green")
-    let newRect = new Rectangle((Math.random() * 400), 720, 100, 10, "green")
-    let rectDie = new Rectangle(0, 0, 750, 10, "red")
-    let circle = new Circle(150, 710, 10, "black")
-    rect.drawRect()
-    rectDie.drawRect()
-    circle.drawCircle()
-
-    let ctx = document.getElementById("canvas").getContext("2d")
-    let interval   
+    let canvas = document.getElementById("canvas")
+    let ctx = canvas.getContext("2d")
+    let ball = new Ball(canvas.width / 2, canvas.height / 2, 10, "black")
+    let brickDie = new Brick(0, 0, 400, 100, "red")
+    let brick1 = new Brick((Math.random() * 300), 720, 100, 10, "green")
+    let brick2 = new Brick((Math.random() * 300), 800, 100, 10, "green")
+    let brick3 = new Brick((Math.random() * 300), 880, 100, 10, "green")
+    let brick4 = new Brick((Math.random() * 300), 960, 100, 10, "green")
+    let brick5 = new Brick((Math.random() * 300), 1040, 100, 10, "green")
+    let brick6 = new Brick((Math.random() * 300), 1120, 100, 10, "green")
+    let brick7 = new Brick((Math.random() * 300), 1200, 100, 10, "green")
+    let brick8 = new Brick((Math.random() * 300), 1280, 100, 10, "green")
+    let brick9 = new Brick((Math.random() * 300), 1360, 100, 10, "green")
+    let bricks = [brick1, brick2, brick3, brick4, brick5, brick6, brick7,  brick8]
     
-    //vẽ hcn mới
-    function drawNewRect1(rectangle) {
-        while (rectangle.y) {
-            if (rectangle.y == 700) {
-                newRect.drawRect()
-            }
-        }
-            
-            speedRect(newRect)
-    }
 
-    function newGame() {
-        if (circle.isCheckCollision(rect)) {
-            moveRect()
+    function getBrick() {
+        for (let i = 0; i < bricks.length; i++) {
+            bricks[i].y -= 5
+            bricks[i].drawBrick()
         }
     }
 
-    //tốc độ hcn
-    function speedRect(rectangle) {
-        rectangle.y -= 5
+    function deleteAndAddBrick() {
+        if (bricks[0] == 100) {
+            bricks.shift()
+        }
+        bricks.push(brick9)
     }
 
-    //tốc độ hình tròn
-    function speedCircleDown(circle) {
-        circle.y += 5
+    function speedBall(ball) {
+            ball.y -= 5
     }
 
-    //hình tròn rơi
-    // function moveCircleDown() {
-    //     speedCircleDown(circle)
-    // }
-
-    function speedCircle(circle) {
-            circle.y -= 5
+    function speedBallDown(ball) {
+        if (ball.x < 90 || ball.x > 210) {
+            ball.y += 10
+        }
     }
 
-    //hcn di chuyển
-    function moveRect() {
-        ctx.clearRect(0, 0, 400, 750)
-        speedRect(rect)
-        speedCircle(circle)
-        drawNewRect1(rect)
-        checkWin()
-        rect.drawRect()
-        rectDie.drawRect()
-        circle.drawCircle()
+    function moveLeft(ball) {
+        ball.x -= 5
     }
 
-    function moveLeft(circle) {
-        circle.x -= 5
-    }
-
-    function moveRight(circle) {
-        circle.x += 5
+    function moveRight(ball) {
+        ball.x += 5
     }
 
     function moveSelection(evt) {
         switch(evt.keyCode) {
             case 37:
-                moveLeft(circle);
+                moveLeft(ball);
                 break;
             case 39:
-                moveRight(circle);
+                moveRight(ball);
                 break;
         }
     }
 
     window.addEventListener("keydown", moveSelection)
 
-    // while (rect.y) {
-    //     if (rect.y == 700) {
-    //         drawNewRect1()
-    //     }
-    // }
+    function playGame() {
+        ctx.clearRect(0, 0, 400, 700)
+        while (deleteAndAddBrick()) {
+            if (bricks[0].y == 100) {
+                deleteAndAddBrick()
+            }
+        }
+        getBrick()
+        checkWin()
+        ball.drawBall()
+        brickDie.drawBrick()
+    }
 
     function checkWin() {
-        if (circle.y <= 0) {
+        if (ball.y <= 100 || ball.y >= 720) {
             alert("lose")
         }
     }
 
 
+    //hcn di chuyển
+    // function playGame() {
+    //     ctx.clearRect(0, 0, 400, 700)
+    //     // if (rect.y > 0) {
+    //         speedBrick(rect)
+    //         rect.drawRect()
+    //     // } else {
+    //     //     speedRect(newRect)
+    //     //     newRect.drawRect()
+    //     // }
+    //     speedBallDown()
+    //     checkWin()
+    //     rectBrick.drawBrick()
+    //     ball.drawBall()
+    // }
+
+
+
     function start() {
-        interval = setInterval(moveRect, 150)
+        interval = setInterval(playGame, 150)
     }
 
     function stop() {
