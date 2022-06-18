@@ -61,20 +61,28 @@
         }
 
         isCheckCollision(brick) {
-            if (ball.x < brick.x) {
-                this.x = brick.x
-            } else if (ball.x > brick.width) {
-                this.x = brick.width
+            let Ax = this.x
+            let Ay = this.y
+
+            let brick_left = brick.x;
+            let brick_top = brick.y;
+            let brick_right = brick.x + brick.width;
+            let brick_bottom = brick.y + brick.height;
+
+            if (this.x < brick_left) {
+                Ax = brick_left
+            } else if (ball.x > brick_right) {
+                Ax = brick_right
             }
 
-            if (ball.y < brick.y) {
-                this.y = brick.y
-            } else if (ball.y > brick.height) {
-                this.y = brick.height
+            if (this.y < brick_top) {
+                Ay = brick_top
+            } else if (this.y > brick_bottom) {
+                Ay = brick_bottom
             }
 
-            let dx = ball.x - this.x
-            let dy = ball.y - this.y
+            let dx = this.x - Ax
+            let dy = this.y - Ay
 
             return (Math.pow(dx, 2) * Math.pow(dy, 2)) <= Math.pow(this.radius, 2)
         }
@@ -103,21 +111,18 @@
     }
 
     function deleteAndAddBrick() {
-        if (bricks[0] == 100) {
-            bricks.shift()
-        }
-        bricks.push(brick9)
+        
     }
 
-    function speedBall(ball) {
+    function speedBall() {
             ball.y -= 5
     }
 
-    function speedBallDown(ball) {
-        if (ball.x < 90 || ball.x > 210) {
+    function speedBallDown() {
+        // if (ball.x < 90 || ball.x > 210) {
             ball.y += 10
         }
-    }
+    // }
 
     function moveLeft(ball) {
         ball.x -= 5
@@ -142,12 +147,8 @@
 
     function playGame() {
         ctx.clearRect(0, 0, 400, 700)
-        while (deleteAndAddBrick()) {
-            if (bricks[0].y == 100) {
-                deleteAndAddBrick()
-            }
-        }
         getBrick()
+        speedBallDown()
         checkWin()
         ball.drawBall()
         brickDie.drawBrick()
@@ -158,7 +159,6 @@
             alert("lose")
         }
     }
-
 
     //hcn di chuyển
     // function playGame() {
@@ -175,8 +175,6 @@
     //     rectBrick.drawBrick()
     //     ball.drawBall()
     // }
-
-
 
     function start() {
         interval = setInterval(playGame, 150)
