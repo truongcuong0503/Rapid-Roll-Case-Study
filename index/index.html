@@ -59,34 +59,8 @@
             ctx.fill()
             ctx.closePath()
         }
-
-        isCheckCollision(brick) {
-            let Ax = this.x
-            let Ay = this.y
-
-            let brick_left = brick.x;
-            let brick_top = brick.y;
-            let brick_right = brick.x + brick.width;
-            let brick_bottom = brick.y + brick.height;
-
-            if (this.x < brick_left) {
-                Ax = brick_left
-            } else if (this.x > brick_right) {
-                Ax = brick_right
-            }
-
-            if (this.y < brick_top) {
-                Ay = brick_top
-            } else if (this.y > brick_bottom) {
-                Ay = brick_bottom
-            }
-
-            let dx = this.x - Ax
-            let dy = this.y - Ay
-
-            return (Math.pow(dx, 2) * Math.pow(dy, 2)) <= Math.pow(this.radius, 2)
-        }
     }
+
     let canvas = document.getElementById("canvas")
     let ctx = canvas.getContext("2d")
     let ball = new Ball(canvas.width / 2, canvas.height / 2, 10, "black")
@@ -100,28 +74,23 @@
     let brick7 = new Brick((Math.random() * 300), 1200, 100, 10, "green")
     let brick8 = new Brick((Math.random() * 300), 1280, 100, 10, "green")
     let brick9 = new Brick((Math.random() * 300), 1360, 100, 10, "green")
-    let bricks = [brick1, brick2, brick3, brick4, brick5, brick6, brick7,  brick8]
+    let bricks = [brick1, brick2, brick3, brick4, brick5, brick6, brick7,  brick8, brick9]
     
 
     function getBrick() {
         for (let i = 0; i < bricks.length; i++) {
             bricks[i].y -= 5
             bricks[i].drawBrick()
+            
         }
     }
 
     function deleteAndAddBrick() {
-        
-    }
-
-    function playGame() {
         for (let i = 0; i < bricks.length; i++) {
-            bricks[i] += ball.isCheckCollision(bricks[i])
+            if (bricks[i].y <= brickDie.y) {
+                bricks[i].y = 720;
+            }
         }
-        // if (ball.isCheckCollision(bricks)) {
-            // game()
-        // }
-        game()
     }
 
     function speedBall() {
@@ -130,16 +99,26 @@
 
     function speedBallDown() {
         // if (ball.x < 90 || ball.x > 210) {
-            ball.y += 10
+            ball.y += 5
         }
     // }
 
     function moveLeft(ball) {
-        ball.x -= 5
+        if (ball.x == ball.radius) {
+            ball.x += 0
+        } else {
+            ball.x -= 5
+        }
+        
     }
 
     function moveRight(ball) {
-        ball.x += 5
+        if (ball.x == (canvas.width - ball.radius)) {
+            ball.x += 0
+        } else {
+            ball.x += 5
+        }
+        // ball.x += 5
     }
 
     function moveSelection(evt) {
@@ -155,13 +134,28 @@
 
     window.addEventListener("keydown", moveSelection)
 
-    function game() {
-        ctx.clearRect(0, 0, 400, 700)
+    function drawGame() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height)
         getBrick()
-        // speedBallDown()
+        // if ()
+        speedBallDown()
+        // Check va chạm
+        // isBallCollideAnyBrick(ball, bricks);
+        isCheckCollision()
+        deleteAndAddBrick();
         checkWin()
         ball.drawBall()
         brickDie.drawBrick()
+        
+    }
+
+    function isCheckCollision() {
+        for (let i = 0; i < bricks.length; i++) {
+            if (ball.x + ball.radius >= bricks[i].x && ball.x + ball.radius <= bricks[i].x + bricks[i].width && ball.y + ball.radius >= bricks[i].y - bricks[i].height) {
+                ball.y -= 5
+            }
+        }
+        
     }
 
     function checkWin() {
@@ -187,7 +181,7 @@
     // }
 
     function start() {
-        interval = setInterval(playGame, 150)
+        interval = setInterval(drawGame, 1000/50)
     }
 
     function stop() {
