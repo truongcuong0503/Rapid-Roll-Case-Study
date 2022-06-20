@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rapid Roll</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body onload="draw()">
+    <center>
+    <button type="button" id="start" onclick="start()">New Game</button>
+    <button id="reset" onclick="restart()" style="display: none">Restart</button>
+    </center>
+    <center>
+        
+    <canvas width="400px" height="700px" style="border: 1px solid aqua;" id="canvas"></canvas>
+    </center>  
+</body>
+<script src="./class.js"></script>
+<script src="./config.js"></script>
+<script src="./check.js"></script>
+<script src="./brick.js"></script>
+<script src="./ball.js"></script>
+<!-- <script src="./score.js"></script> -->
+<script src="./main.js"></script>
+</html>
