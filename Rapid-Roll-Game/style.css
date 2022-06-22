@@ -1,5 +1,4 @@
 * {
-    border: 0;
     margin: 0;
     padding: 0;
 }
@@ -21,7 +20,6 @@ canvas {
     position: absolute;
     top: 480px;
     left: 680px;
-    /* background: rgb(65, 18, 18); */
 }
 #reset{
     background:#1abc9c;
